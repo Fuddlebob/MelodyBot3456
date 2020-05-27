@@ -4,6 +4,7 @@
 *.json
 *.pyc
 !exampleConfig.json
+log.txt
 files/*
 Soundfonts/*
 testTransform.py
