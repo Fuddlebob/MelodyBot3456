@@ -76,6 +76,9 @@ This section contains properties relating to the archiving of generated files. I
 This section details random effects that can be applied during the generation of the video. Set each property to `true` if you want the effect to be applied, and `false` otherwise. Currently there is only one property, but I may add more in future.
 - `audio_replace`
   - Replaces the audio of the generated video with a different audio file. Requires the addition of an additional property, `replace_with`, containing the location of the specific file you wish to replace the audio with.
+  
+# Soundfonts
+This script requires the use of SoundFont2 (.sf2) files to run correctly. These files are like virtual instruments that are used in conjunction with a generated MIDI file to create an audio track. There are a number of free soundfonts that are easily available online - simply Google "Free soundfonts" and you should be able to find a fair few. The files will have to be placed into a single directory, which you can specify the location of in the config file. Check the above section for details.
 
 # Notes on Mingus
 This project requires use of the Mingus library to work. Unfortunately, there is no official version of Mingus that works in Python 3. Instead, I found a repo of an attempt at translating the library for Python 3, edited it slightly to fit my purposes, and included it wholesale in the scope of this project. As such, I claim no authorship over anything inside the "mingus" folder.
