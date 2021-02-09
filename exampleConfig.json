@@ -1,0 +1,66 @@
+{
+	"outfiles":		{
+						"home" : "/path/to/file/staging/directory/",
+						"outmp4" : "random.mp4",
+						"outwav" : "random.wav",
+						"outmp3" : "random.mp3",
+						"outmp3_temp" : "random_temp.mp3",
+						"outmid" : "random.mid",
+						"outpng" : "outsheet.png",
+						"outsvg" : "outsheet.svg",
+						"outlog" : "/absolute/path/to/logging/file",
+						"frame_folder" : "frames/",
+						"frame_data_file" : "framelength.txt"
+					},
+					
+	"remove_files": {	
+						"outmp4" : false,
+						"outwav" : true,
+						"outmp3" : true,
+						"outmp3_temp" : true,
+						"outmid" : true,
+						"outpng" : true,
+						"outsvg" : true,
+						"outlog" : true,
+						"frame_folder" : true,
+						"frame_data_file" : true
+					},
+						
+	
+	"infiles" :		{	
+						"soundfont_folder" : "/path/to/soundfont/folder"
+					},
+	
+	"song_params" :	{
+						"instrument" : null,
+						"tempo" : null,
+						"key" : null,
+						"seed" : null,
+						"sample_rate" : 44100,
+						"target_volume" : -11.0
+					},
+	
+	"upload" : 		{
+						"facebook" :	{
+											"upload" : true,
+											"token"  : "Insert facebook token here"
+										},
+										
+						"twitter" :		{
+											"upload" : true,
+											"consumer_key" : "Insert twitter consumer key here",
+											"consumer_secret_key" : "Insert twitter consumer secret key here",
+											"access_token" : "Insert twitter access token here",
+											"access_token_secret" : "Insert twitter secret access token here"
+										}
+					},
+	
+	"archive" :		{
+						"archive" : true,
+						"location" : "/path/to/archive/location"
+					},
+	
+	"fun_stuff" :	{
+						"audio_replace" : false
+					}
+}

@@ -134,12 +134,14 @@ class VideoTweet(object):
 		'''
 		Checks video processing status
 		'''
+		print('STATUS')
 		request_params = {
 			'command': 'STATUS',
 			'media_id': int(self.media_id)
 		}
 		
 		req = requests.get(url=TWITTER_MEDIA_ENDPOINT_URL, params=request_params, auth=TW_OAUTH)
+		print(req.json())
 		
 		processing_info = req.json().get('processing_info', None)
 		
