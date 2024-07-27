@@ -6,6 +6,7 @@ import time
 FACEBOOK_MEDIA_ENDPOINT_URL = 'https://graph-video.facebook.com/me/videos'
 
 TWITTER_MEDIA_ENDPOINT_URL = 'https://upload.twitter.com/1.1/media/upload.json'
+TWITTER_V2_TWEET_ENDPOINT_URL = 'https://api.twitter.com/2/tweets'
 POST_TWEET_URL = 'https://api.twitter.com/1.1/statuses/update.json'
 
 TW_OAUTH=None
@@ -67,6 +68,7 @@ class VideoTweet(object):
 		}
 
 		req = requests.post(url=TWITTER_MEDIA_ENDPOINT_URL, data=request_data, auth=TW_OAUTH)
+		print(str(req))
 		media_id = req.json()['media_id']
 
 		self.media_id = media_id
@@ -164,8 +166,14 @@ class VideoTweet(object):
 		'''
 		Publishes Tweet with attached video
 		'''
+		print(self.media_id)
 		request_data = {
-			'status': message,
-			'media_ids': self.media_id
+			'text': message,
+			'media' : {
+				'media_ids' : [str(self.media_id)]
+			},
 		}
-		req = requests.post(url=POST_TWEET_URL, data=request_data, auth=TW_OAUTH)
+		headers = {'Content-type': 'application/json'}
+		print(request_data)
+		req = requests.post(url=TWITTER_V2_TWEET_ENDPOINT_URL, headers=headers, json=request_data, auth=TW_OAUTH)
+		print(str(req.content))

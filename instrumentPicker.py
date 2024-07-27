@@ -3,6 +3,8 @@ import os
 import random
 from randomList import randomList
 
+
+
 class InstrumentPicker(object):
 
 	def __init__(self, fp):
@@ -20,7 +22,7 @@ class InstrumentPicker(object):
 		ilist = []
 		if(mrl.pickWeighted()):
 			ilist = self.Find(["Meme"])
-			print("Searching for Meme instruments")
+			#print("Searching for Meme instruments")
 		else:
 			tags_to_use = []
 			#chance to pick specifically a meme font
@@ -37,9 +39,9 @@ class InstrumentPicker(object):
 			irl.add("SFX", 15)
 			tags_to_use.append(irl.pickWeighted())
 			ilist = self.Exclude(self.Find(tags_to_use), "Meme")
-			print("Searching for instruments with tags: " + str(tags_to_use))
+			#print("Searching for instruments with tags: " + str(tags_to_use))
 			if(not ilist):
-				print("No instrument found, retrying.")
+				#print("No instrument found, retrying.")
 				return self.Pick()
 			
 		return random.choice(ilist);
@@ -111,8 +113,33 @@ class InstrumentPicker(object):
 			
 		print(self.Pick())
 		return
-
+		
+	def ipf(self, val):
+		return("{0:.4f}".format(val))
+	
+	def PrintOdds(self):
+		print("Running trials...")
+		i = 0
+		results = {}
+		for item in self.list:
+			results[item["name"]] = 0
+			i = i + 1
+		
+		numTrials = i * 1000
+		for j in range(numTrials):
+			r = self.Pick()
+			results[r] = results[r] + 1
+		
+		print(results.items())
+		
+		for item in results.items():
+		
+			name = item[0]
+			count = item[1]
+			chance = (count / numTrials) * 100
+			print(name + ": " + str(count) + "(" + self.ipf(chance) + "%)")
 	
 if(__name__ == '__main__'):
 	ip = InstrumentPicker("Soundfonts/")
 	ip.Test()
+	ip.PrintOdds()

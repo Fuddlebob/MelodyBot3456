@@ -3,6 +3,7 @@
 **.ini
 *.json
 *.pyc
+*.bak
 !exampleConfig.json
 log.txt
 files/*
