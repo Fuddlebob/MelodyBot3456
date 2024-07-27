@@ -340,9 +340,9 @@ def create_frames(melody):
 	linkreg = re.compile(r'(\d\d*):(\d\d*):(\d\d*)')
 	coordreg = re.compile(r'(\d[\d\.]*), (\d[\d\.]*)') 
 	for child in root:
-		tag = child.tag[svglen:]
-		if(tag == "a" and len(list(child)) == 1):
-			if(tag == "path" or (tag == "g" and child[0][0].tag[svglen:] == "path")):
+		if(child.tag[svglen:] == "a" and len(list(child)) == 1):
+			ctag = child[0].tag[svglen:]
+			if(ctag == "path" or (ctag == "g" and child[0][0].tag[svglen:] == "path")):
 				link = child.get(linktag + "href")
 				r = linkreg.search(link)
 				coordstr = child[0].get("transform")[10:26]
