@@ -68,7 +68,7 @@ class VideoTweet(object):
 		}
 
 		req = requests.post(url=TWITTER_MEDIA_ENDPOINT_URL, data=request_data, auth=TW_OAUTH)
-		print(str(req))
+		#print(str(req))
 		media_id = req.json()['media_id']
 
 		self.media_id = media_id
@@ -166,7 +166,7 @@ class VideoTweet(object):
 		'''
 		Publishes Tweet with attached video
 		'''
-		print(self.media_id)
+		#print(self.media_id)
 		request_data = {
 			'text': message,
 			'media' : {

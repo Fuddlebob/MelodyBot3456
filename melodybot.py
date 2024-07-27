@@ -41,7 +41,7 @@ svglen = len(svgtag)
 linklen = len(linktag)
 
 
-tempos = [60.0, 75.0, 90.0, 100.0, 120.0, 150.0, 180.0, 200.0, 240.0];
+tempos = [60.0, 75.0, 90.0, 100.0, 120.0, 150.0, 180.0, 200.0, 240.0]
 measures = [.25, .5, 1, 2, 4]
 durations = [1, 2, 4, 8, 16]
 signatures = [(2, 2), (3, 2), (2,4), (3, 4), (4, 4), (5, 4), (6, 4), (3, 8), (5, 8), (7, 8), (9, 8), (11,8), (12, 8), (13, 8), (15, 16)]  
@@ -180,10 +180,10 @@ def remove_files(force = False):
 		if(rm[f] or force):
 			path = FILE_HOME + out[f]
 			if os.path.isfile(path):
-				print("Removing file: " + path);
+				print("Removing file: " + path)
 				os.remove(path)  # remove the file
 			elif os.path.isdir(path):
-				print("Removing directory: " + path);
+				print("Removing directory: " + path)
 				shutil.rmtree(path)  # remove dir and all contains	
 			
 def write_song(melody):
@@ -257,7 +257,7 @@ def exportToWav(melody):
 def wavToMp4():
 	print("Converting to mp3...")
 	#convert to mp3
-	song = AudioSegment.from_wav(OUTWAV);
+	song = AudioSegment.from_wav(OUTWAV)
 	song.export(OUTMP3, format="mp3")
 
 	#remove .mp4 files
@@ -277,7 +277,7 @@ def wavToMp4():
 		'-c:v', 'libx264', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
 		'-c:a', 'aac', '-shortest', '-f', 'mp4', OUTMP4], 
 		stdout=shutup, stderr=shutup)
-	if os.path.exists(FRAMELENGTHTXT):
+	if os.path.exists(FRAMELENGTHTXT) and cfg["remove_files"].dict["frame_data_file"]:
 		os.remove(FRAMELENGTHTXT)
 	
 
@@ -335,15 +335,15 @@ def create_frames(melody):
 	sheet = LilyPond.from_Track(melody.notes)
 	LilyPond.to_svg(sheet, OUTSVG)
 	tree = ET.parse(OUTSVG)
-	root = tree.getroot();
-	i = 0;
+	root = tree.getroot()
+	i = 0
 	notelist = []
 	linkreg = re.compile(r'(\d\d*):(\d\d*):(\d\d*)')
 	coordreg = re.compile(r'(\d[\d\.]*), (\d[\d\.]*)') 
 	for child in root:
 		if(child.tag[svglen:] == "a" and len(list(child)) == 1):
-			if(child[0].tag[svglen:] == "path"):
-				link = child.get(linktag + "href");
+			if(child[0].tag[svglen:] == "path" or child[0][0].tag[svglen:] == "path"):
+				link = child.get(linktag + "href")
 				r = linkreg.search(link)
 				coordstr = child[0].get("transform")[10:26]
 				r2 = coordreg.search(coordstr)
@@ -358,7 +358,7 @@ def create_frames(melody):
 	f = open(FRAMELENGTHTXT, "a+")
 	if(not os.path.exists(FRAMEPATH)):
 		os.mkdir(FRAMEPATH)
-	index = 0;
+	index = 0
 	for n in notelist:
 		frame = Image.open(VIDPIC)
 		draw = ImageDraw.Draw(frame)
