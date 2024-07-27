@@ -63,7 +63,6 @@ CK = tw["consumer_key"]
 CSK = tw["consumer_secret_key"]
 AT = tw["access_token"]
 ATS = tw["access_token_secret"]
-BEARER_TOKEN = tw["bearer_token"]
 socialMedia.TW_OAUTH = OAuth1(CK,
 	client_secret=CSK,
 	resource_owner_key=AT,
@@ -314,7 +313,7 @@ def upload_song(melody):
 		print("Facebook upload skipped.")
 	print("Twitter:")
 	if(tw["upload"]):
-		socialMedia.upload_to_twitter(OUTMP4, BEARER_TOKEN, message)
+		socialMedia.upload_to_twitter(OUTMP4, message)
 	else:
 		print("Twitter upload skipped")
 	
