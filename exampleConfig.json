@@ -52,7 +52,12 @@
 											"consumer_secret_key" : "Insert twitter consumer secret key here",
 											"access_token" : "Insert twitter access token here",
 											"access_token_secret" : "Insert twitter secret access token here"
-										}
+										},
+										
+						"mastodon" : 	{
+											"upload" : true,
+											"host" : "Insert Mastodon instance here",
+											"access_token" : "Insert Mastodon access token here"
 					},
 	
 	"archive" :		{

@@ -6,8 +6,8 @@ import time
 TW_OAUTH=None
 FB_TOKEN=None
 
-MASTODON_TOKEN=None
 MASTODON_HOST=None
+MASTODON_TOKEN=None
 
 FACEBOOK_MEDIA_ENDPOINT_URL = 'https://graph-video.facebook.com/me/videos'
 

@@ -67,6 +67,11 @@ socialMedia.TW_OAUTH = OAuth1(CK,
 	client_secret=CSK,
 	resource_owner_key=AT,
 	resource_owner_secret=ATS)
+	
+###MASTODON STUFF
+ms = cfg["upload"]["mastodon"]
+socialMedia.MASTODON_HOST = ms["host"]
+socialMedia.MASTODON_TOKEN = ms["access_token"]
 
 ##SONG PARAMS
 sp = cfg["song_params"]
@@ -317,6 +322,11 @@ def upload_song(melody):
 		socialMedia.upload_to_twitter(OUTMP4, message)
 	else:
 		print("Twitter upload skipped")
+		
+	if(ms["upload"]):
+		socialMedia.upload_to_mastodon(OUTMP4, messsage)
+	else:
+		print("Mastodon upload skipped")
 	
 	t = time.strftime("%d-%m-%y %H:%M")
 	log = open(LOGPATH, "a+")
