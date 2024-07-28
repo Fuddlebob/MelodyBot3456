@@ -3,13 +3,19 @@ import os
 from requests_oauthlib import OAuth1
 import time
 
+TW_OAUTH=None
+FB_TOKEN=None
+
+MASTODON_TOKEN=None
+MASTODON_HOST=None
+
 FACEBOOK_MEDIA_ENDPOINT_URL = 'https://graph-video.facebook.com/me/videos'
 
 TWITTER_MEDIA_ENDPOINT_URL = 'https://upload.twitter.com/1.1/media/upload.json'
 POST_TWEET_URL = 'https://api.twitter.com/1.1/statuses/update.json'
 
-TW_OAUTH=None
-FB_TOKEN=None
+MASTODON_MEDIA_URL = f'https://{MASTODON_HOST}/api/v2/media'
+MASTODON_STATUS_URL = f'https://{MASTODON_HOST}/api/v1/statuses'
 
 
 def upload_to_facebook(vidname, message):
@@ -169,3 +175,22 @@ class VideoTweet(object):
 			'media_ids': self.media_id
 		}
 		req = requests.post(url=POST_TWEET_URL, data=request_data, auth=TW_OAUTH)
+		
+		
+def upload_to_mastodon(vidname, message):
+	mastodon_api_auth = {'Authorization': f'Bearer {MASTODON_TOKEN}'}
+	
+	#first we need to upload the video
+	files={'file':open(vidname,'rb')}
+	media_req = requests.post(MASTODON_MEDIA_URL, files=files, headers=mastodon_api_auth)
+	media_id=media_req.json()["id"]
+	
+	#then we make a status with the video as an attachment
+	status_req_data = {
+			'status' : message,
+			'media_ids[]' : [media_id],
+			'visibility' : 'public'
+		}
+	
+	req = requests.post(MASTODON_API_URL, data=status_req_data, headers=mastodon_api_auth)
+	print(str(req.content))
