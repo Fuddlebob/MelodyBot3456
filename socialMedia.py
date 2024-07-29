@@ -192,6 +192,36 @@ def upload_to_mastodon(vidname, message):
 	media_req = requests.post(mastodon_media_url, files=files, headers=mastodon_api_auth)
 	media_id=media_req.json()["id"]
 
+	#need to check if video is done processing
+	media_req_status = media_req.status_code
+
+	if(media_req_status == 200):
+		#media was accepted and processed synchronously
+		processed = True
+	elif(media_req_status == 202):
+		#media was accepted but has not yet finished processing
+		processed = False
+	else:
+		#unknown error occurred
+		print(f'Unknown error {media_req_status} when uploading media')
+		return
+
+	mastodon_media_get_url = f'https://{MASTODON_HOST}/api/v1/media/{media_id}'
+	while(not processed):
+		proc_req = requests.get(mastodon_media_get_url, headers=mastodon_api_auth)
+		status = proc_req.status_code
+		if (status == 200):
+			#finished processing
+			processed=True
+		elif (status == 206):
+			#not finished processing, wait a few seconds before trying again
+			processed=False
+			time.sleep(3)
+		else:
+			#some other error occurred
+			print(f'Unknown error {status} when checking media status')
+			return
+
 	#then we make a status with the video as an attachment
 	status_req_data = {
 			'status' : message,
