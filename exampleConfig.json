@@ -58,6 +58,7 @@
 											"upload" : true,
 											"host" : "Insert Mastodon instance here",
 											"access_token" : "Insert Mastodon access token here"
+										}
 					},
 	
 	"archive" :		{
