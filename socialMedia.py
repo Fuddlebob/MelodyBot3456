@@ -185,21 +185,21 @@ class VideoTweet(object):
 		print(str(req.content))
 		
 		
-	def upload_to_mastodon(vidname, message):
-		mastodon_api_auth = {'Authorization': f'Bearer {MASTODON_TOKEN}'}
-	
-		#first we need to upload the video
-		files={'file':open(vidname,'rb')}
-		media_req = requests.post(MASTODON_MEDIA_URL, files=files, headers=mastodon_api_auth)
-		media_id=media_req.json()["id"]
-	
-		#then we make a status with the video as an attachment
-		status_req_data = {
-				'status' : message,
-				'media_ids[]' : [media_id],
-				'visibility' : 'public'
-			}
-	
-		req = requests.post(MASTODON_API_URL, data=status_req_data, headers=mastodon_api_auth)
-		print(str(req.content))
+def upload_to_mastodon(vidname, message):
+	mastodon_api_auth = {'Authorization': f'Bearer {MASTODON_TOKEN}'}
+
+	#first we need to upload the video
+	files={'file':open(vidname,'rb')}
+	media_req = requests.post(MASTODON_MEDIA_URL, files=files, headers=mastodon_api_auth)
+	media_id=media_req.json()["id"]
+
+	#then we make a status with the video as an attachment
+	status_req_data = {
+			'status' : message,
+			'media_ids[]' : [media_id],
+			'visibility' : 'public'
+		}
+
+	req = requests.post(MASTODON_API_URL, data=status_req_data, headers=mastodon_api_auth)
+	print(str(req.content))
 
