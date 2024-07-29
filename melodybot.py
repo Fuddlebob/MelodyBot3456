@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # A bot to randomly generate music
 #
 #
