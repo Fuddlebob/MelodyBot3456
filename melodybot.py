@@ -324,7 +324,7 @@ def upload_song(melody):
 		print("Twitter upload skipped")
 		
 	if(ms["upload"]):
-		socialMedia.upload_to_mastodon(OUTMP4, messsage)
+		socialMedia.upload_to_mastodon(OUTMP4, message)
 	else:
 		print("Mastodon upload skipped")
 	
