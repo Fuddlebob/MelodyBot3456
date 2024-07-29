@@ -12,6 +12,7 @@ MASTODON_TOKEN=None
 FACEBOOK_MEDIA_ENDPOINT_URL = 'https://graph-video.facebook.com/me/videos'
 
 TWITTER_MEDIA_ENDPOINT_URL = 'https://upload.twitter.com/1.1/media/upload.json'
+TWITTER_V2_TWEET_ENDPOINT_URL = 'https://api.twitter.com/2/tweets'
 POST_TWEET_URL = 'https://api.twitter.com/1.1/statuses/update.json'
 
 MASTODON_MEDIA_URL = f'https://{MASTODON_HOST}/api/v2/media'
@@ -73,6 +74,7 @@ class VideoTweet(object):
 		}
 
 		req = requests.post(url=TWITTER_MEDIA_ENDPOINT_URL, data=request_data, auth=TW_OAUTH)
+		#print(str(req))
 		media_id = req.json()['media_id']
 
 		self.media_id = media_id
@@ -170,27 +172,34 @@ class VideoTweet(object):
 		'''
 		Publishes Tweet with attached video
 		'''
+		#print(self.media_id)
 		request_data = {
-			'status': message,
-			'media_ids': self.media_id
+			'text': message,
+			'media' : {
+				'media_ids' : [str(self.media_id)]
+			},
 		}
-		req = requests.post(url=POST_TWEET_URL, data=request_data, auth=TW_OAUTH)
+		headers = {'Content-type': 'application/json'}
+		print(request_data)
+		req = requests.post(url=TWITTER_V2_TWEET_ENDPOINT_URL, headers=headers, json=request_data, auth=TW_OAUTH)
+		print(str(req.content))
 		
 		
-def upload_to_mastodon(vidname, message):
-	mastodon_api_auth = {'Authorization': f'Bearer {MASTODON_TOKEN}'}
+	def upload_to_mastodon(vidname, message):
+		mastodon_api_auth = {'Authorization': f'Bearer {MASTODON_TOKEN}'}
 	
-	#first we need to upload the video
-	files={'file':open(vidname,'rb')}
-	media_req = requests.post(MASTODON_MEDIA_URL, files=files, headers=mastodon_api_auth)
-	media_id=media_req.json()["id"]
+		#first we need to upload the video
+		files={'file':open(vidname,'rb')}
+		media_req = requests.post(MASTODON_MEDIA_URL, files=files, headers=mastodon_api_auth)
+		media_id=media_req.json()["id"]
 	
-	#then we make a status with the video as an attachment
-	status_req_data = {
-			'status' : message,
-			'media_ids[]' : [media_id],
-			'visibility' : 'public'
-		}
+		#then we make a status with the video as an attachment
+		status_req_data = {
+				'status' : message,
+				'media_ids[]' : [media_id],
+				'visibility' : 'public'
+			}
 	
-	req = requests.post(MASTODON_API_URL, data=status_req_data, headers=mastodon_api_auth)
-	print(str(req.content))
+		req = requests.post(MASTODON_API_URL, data=status_req_data, headers=mastodon_api_auth)
+		print(str(req.content))
+

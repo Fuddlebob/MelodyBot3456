@@ -21,7 +21,7 @@
 						"outmid" : true,
 						"outpng" : true,
 						"outsvg" : true,
-						"outlog" : true,
+						"outlog" : false,
 						"frame_folder" : true,
 						"frame_data_file" : true
 					},

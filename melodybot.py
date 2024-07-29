@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # A bot to randomly generate music
 #
 #
@@ -352,7 +353,8 @@ def create_frames(melody):
 	coordreg = re.compile(r'(\d[\d\.]*), (\d[\d\.]*)') 
 	for child in root:
 		if(child.tag[svglen:] == "a" and len(list(child)) == 1):
-			if(child[0].tag[svglen:] == "path" or child[0][0].tag[svglen:] == "path"):
+			ctag = child[0].tag[svglen:]
+			if(ctag == "path" or (ctag == "g" and child[0][0].tag[svglen:] == "path")):
 				link = child.get(linktag + "href")
 				r = linkreg.search(link)
 				coordstr = child[0].get("transform")[10:26]
@@ -411,4 +413,3 @@ def archive_files(fromlocation, tolocation):
 	
 if(__name__ == '__main__'):
 	main()
-
