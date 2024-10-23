@@ -1,145 +1,48 @@
 import jsonreader
+import sqlite3
 import os
+import sys
+import re
+from sqlite3 import Error
 import random
-from randomList import randomList
 
 
 
 class InstrumentPicker(object):
 
-	def __init__(self, fp):
-		self.sfDir = fp
-		self.infoFile = fp + "info.json"
-		reader = jsonreader.Reader(self.infoFile)
-		self.tags = reader["Available_tags"]
-		self.list = reader["Instruments"]
+	def __init__(self, conn):
+		self.conn = conn
 
 
 	def Pick(self):
-		mrl = randomList()
-		mrl.add(True, 5)
-		mrl.add(False, 95)
-		ilist = []
-		if(mrl.pickWeighted()):
-			ilist = self.Find(["Meme"])
-			#print("Searching for Meme instruments")
-		else:
-			tags_to_use = []
-			#chance to pick specifically a meme font
-			if(mrl.pickWeighted()):
-				tags_to_use.append("Percussion")		
-			
-			if(not mrl.pickWeighted()):
-				tags_to_use.append("Melodic")
-				
-			irl = randomList()
-			irl.add("Instrumental", 95)
-			irl.add("Electronic", 95)
-			irl.add("Vox", 20)
-			irl.add("SFX", 15)
-			tags_to_use.append(irl.pickWeighted())
-			ilist = self.Exclude(self.Find(tags_to_use), "Meme")
-			#print("Searching for instruments with tags: " + str(tags_to_use))
-			if(not ilist):
-				#print("No instrument found, retrying.")
-				return self.Pick()
-			
-		return random.choice(ilist);
+		cur = self.conn.cursor()
+		#find highest weight in table
+		maxweight = cur.execute("""
+			SELECT 
+				cumulativeWeight
+			FROM 
+				'Instruments' 
+			ORDER BY 
+				cumulativeWeight DESC 
+			LIMIT 1
+			;""").fetchone()[0]
+		#generate random number from 0 - maxweight
+		rand = random.randint(0, maxweight-1)
+		#find lowest instrument w/ cumulativeWeight above that number
+		result = cur.execute("""
+			SELECT
+				instrumentName,
+				fileLocation
+			FROM
+				'Instruments'
+			WHERE
+				cumulativeWeight > {}
+			ORDER BY
+				cumulativeWeight ASC
+			LIMIT 1
+		""".format(rand)).fetchone()
+		#return name and filepath of that instrument
+		
+		return result
 
-	#Returns a list of all instruments with a particular tag
-	def Find(self, tag):
-		results = []
-		if(isinstance(tag, list)):
-			for item in self.list:
-				flag = True
-				for t in tag:
-					if(not t in item["tags"]):
-						flag = False
-				if(flag):
-					results.append(item["name"])
-		else:
-			for item in self.list:
-				if(tag in item["tags"]):
-					results.append(item["name"])
-				
-		return results
-		
-	#takes in a list of instruments, and then returns the subset that do not contain a given tag
-	def Exclude(self, instruments, tag):
-		results = []
-		for instr in instruments:
-			item = self.Get(instr)
-			if(not tag in item["tags"]):
-				results.append(instr)
-		return results
-		
-	
-	def Get(self, name):
-		for item in self.list:
-			if(item["name"] == name):
-				return item
-		return None
-		
 
-	def Test(self):
-		print("Soundfont Directory: " + self.sfDir)
-		print("Info File: " + self.infoFile)
-		i = 0
-		used_tags = []
-		tag_count = {}
-		for tag in self.tags:
-			tag_count[tag] = 0
-			
-		for item in self.list:
-			if(not os.path.exists(self.sfDir + item["name"] + ".sf2")):
-				print("ERROR - Instrument not found: " + item["name"])
-				return
-			for t in item["tags"]:
-				if(not t in used_tags):
-					used_tags.append(t)
-				tag_count[t] = tag_count[t] + 1
-			i = i + 1
-			
-		print(str(i) + " Instruments listed")
-		for t in used_tags:
-			if(not t in self.tags):
-				print("Unlisted tag found: \'" + t + "\'")
-		for t in self.tags:
-			if(not t in used_tags):
-				print("Tag \'" + t + "\' is listed but not used")
-		print("Tag Counts:")
-		for i in tag_count.items():
-			print(i[0] + ": " + str(i[1]))
-			
-		print(self.Pick())
-		return
-		
-	def ipf(self, val):
-		return("{0:.4f}".format(val))
-	
-	def PrintOdds(self):
-		print("Running trials...")
-		i = 0
-		results = {}
-		for item in self.list:
-			results[item["name"]] = 0
-			i = i + 1
-		
-		numTrials = i * 1000
-		for j in range(numTrials):
-			r = self.Pick()
-			results[r] = results[r] + 1
-		
-		print(results.items())
-		
-		for item in results.items():
-		
-			name = item[0]
-			count = item[1]
-			chance = (count / numTrials) * 100
-			print(name + ": " + str(count) + "(" + self.ipf(chance) + "%)")
-	
-if(__name__ == '__main__'):
-	ip = InstrumentPicker("Soundfonts/")
-	ip.Test()
-	ip.PrintOdds()

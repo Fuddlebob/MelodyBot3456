@@ -51,13 +51,23 @@ def main():
 				fullpath = os.path.abspath(fn)
 				insert_instrument(conn, name, fullpath, weight, cumulativeWeight)
 			else:
-				print(f'Instrument {fn} not found')
+				print(f'Instrument {fn} not found.')
 				
 	else:
 		#Go through each soundfont in the folder and ask for the weight individually
 		print("not yet implemented, write a weight file pls")
-		if(newdb):
-			os.remove(DB_LOCATION)
+	inp=input("Add non-instrument entries? (Y/N): ")
+	while(inp=="Y" or inp=="y"):
+		name=input("Enter name, or leave blank to cancel: ")
+		if(not name):
+			break
+		inpweight=input("Enter weight, or leave blank to cancel: ")
+		if(not inpweight):
+			break
+		weight=int(inpweight)
+		cumulativeWeight += weight
+		insert_instrument(conn, name, "", weight, cumulativeWeight)
+		inp=input("Add more entries? (Y/N): ")
 
 
 

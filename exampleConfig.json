@@ -29,6 +29,7 @@
 	
 	"infiles" :		{	
 						"soundfont_folder" : "/path/to/soundfont/folder"
+						"db" : "/path/to/db"
 					},
 	
 	"song_params" :	{

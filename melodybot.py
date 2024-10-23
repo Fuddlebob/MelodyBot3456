@@ -120,9 +120,10 @@ def main():
 	
 	if(INSTRUMENT is None):
 		ip = instrumentPicker.InstrumentPicker(SOUNDFONT_PATH)
-		melody.instrument = ip.Pick()
+		(melody.instrumentName, melody.filePath) = ip.Pick()
 	else:
-		melody.instrument = INSTRUMENT
+		melody.instrumentName = INSTRUMENT
+		melody.filePath = INSTRUMENT + ".sf2"
 	if(TEMPO is None):
 		tl = randomList()
 		tl.add(tempos, recursive = True)
@@ -146,7 +147,7 @@ def main():
 	random.seed(seed)
 	
 	print(melody.tempo)
-	print(melody.instrument)
+	print(melody.instrumentName)
 	print (melody.key)
 	
 	melody.notes = write_song(melody)
@@ -155,7 +156,7 @@ def main():
 
 	exportToWav(melody)
 	
-	message = 'Instrument: ' + melody.instrument + ' \nTempo: ' + str(melody.tempo) + '\nPlayed in the key of ' + melody.key + '.'
+	message = 'Instrument: ' + melody.instrumentName + ' \nTempo: ' + str(melody.tempo) + '\nPlayed in the key of ' + melody.key + '.'
 	print(message)
 	
 	wavToMp4()
@@ -255,7 +256,7 @@ def write_song(melody):
 	
 def exportToWav(melody):
 	MidiFileOut.write_Track(OUTMID, melody.notes, melody.tempo)
-	sf=SOUNDFONT_PATH + melody.instrument + ".sf2"
+	sf = melody.filePath
 	fs = FluidSynth(sf)
 	fs.midi_to_audio(OUTMID, OUTWAV)
 		
@@ -305,7 +306,7 @@ def normalise_volume():
 
 def upload_song(melody):
 	print("uploading song...")
-	message = 'Instrument: ' + melody.instrument + ' \nTempo: ' + str(melody.tempo) + '\nPlayed in the key of ' + melody.key + '.'
+	message = 'Instrument: ' + melody.instrumentName + ' \nTempo: ' + str(melody.tempo) + '\nPlayed in the key of ' + melody.key + '.'
 	print("Facebook:")
 	if(fb["upload"]):
 		postid = socialMedia.upload_to_facebook(OUTMP4, message)

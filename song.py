@@ -13,7 +13,8 @@ class Song:
 	raw_song = []				#the song as a simple list of note/duration pairs
 	
 	def __init__(self):
-		self.instrument = "Electric Piano 1"
+		self.instrumentName = "Electric Piano 1"
+		self.filePath = "Electric Piano 1.sf2"
 		self.tempo = 120.0
 		self.notes = Track()
 		self.length = 16
